@@ -1,0 +1,168 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes"
+                access="global" 
+                controller="StakeholderController">
+    
+                <aura:html tag="style">
+                    @media (min-width: 47em){
+                        .slds-modal_medium .slds-modal__container {
+                        width: 84rem ;
+                        max-width: 80rem ;
+                        min-width: 40rem ;
+                        margin-left: -300px ;
+                        height:950px;
+                    }}
+                </aura:html>
+    <aura:attribute name="isOpenModel" type="boolean" default="false"/>
+    <aura:attribute name="isDisableClick" type="boolean" default="false"/>
+    <aura:attribute name="Adddisable" type="Boolean" default="false" />
+    <aura:attribute name="selectedAccount" type="sObject"/>
+    
+    <aura:attribute name="Name" type="String" />
+    <aura:attribute name="Identity" type="String" />
+    <aura:attribute name="AccountCode" type="String" />
+    <aura:attribute name="PreferredName" type="String" />
+    <aura:attribute name="Code" type="String" />
+    <aura:attribute name="Comment" type="String" />
+    <aura:attribute name="Description" type="String" />
+    <aura:attribute name="Overdraft" type="date" />
+    <aura:attribute name="Stage" type="boolean"  default="false"  />
+    <aura:attribute name="isNegative" type="boolean"   default="false"   />
+    <aura:attribute name="lstState" type="List" />
+    <aura:attribute name="lstLanguage" type="List" default="[]" />
+    <aura:attribute name="lstNationality" type="List" default="[]" />
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    
+    <aura:method name="openModal" action="{!c.OpenModel}" />
+
+    <div class="slds-m-around_max-large">
+        <aura:if isTrue="{!v.isOpenModel}">
+            <!-- Modal/Popup Box starts here-->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_medium">
+                <!-- <article class="slds-card slds-scrollable_y"> -->
+                    <div class="slds-modal__container">
+                    <!-- Modal/Popup Box Header Starts here-->
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.CloseModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Overdraft</h2>
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium input-form" id="modal-content-id-1">
+                        <div class="slds-tabs_default">
+                            <ul class="slds-tabs_default__nav" role="tablist">
+                                <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation">
+                                    <a class="slds-tabs_default__link"  role="tab" tabindex="0" 
+                                       aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">INFORMATION</a>
+                                </li>
+                            </ul>
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <!-- <c:CustomLookup objectName="Account" 
+                                                    fieldName="Name" 
+                                                    value="{!v.recordId}"
+                                                    label="Group" 
+                                                    iconName="standard:account" 
+                                                    aura:id="compAccount"
+                                                    placeholder="Search Overdraft Group" 
+                                                    conditions="RecordType.Name IN ('Group', 'Line MKT')"
+                                                    
+                                                    /> -->
+                                        <c:O1CustomLookup objectName="Account"
+                                        fields = "['Id', 'Name']"
+                                        iconName="standard:account"
+                                        label="Group"
+                                        setLabel="Name"
+                                        searchFields="['Name']"
+                                        condition="{! 'RecordType.Name = \'Group\' and Id = \''+ v.recordId +'\' '}"
+                                        initValue="{!v.recordId}"
+                                        aura:id="Parent"
+                                        />  
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:input aura:id="Name" label="Account Name" required="true" />
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:input aura:id="PreferredName" name="PreferredName" label="Preferred Name" /> 
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:input aura:id="Overdraft" type="number" name="Overdraft" label="Overdraft Limit" />   
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:input aura:id="Identity" name="Identity" label="Identity" />            
+                                </div>
+                            </div>
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:input type="tel" label="Contact Phone Number" aura:id="Phone" />
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:input type="email" aura:id="Email" label="Email" />
+                                </div>
+                            </div> 
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:select aura:id="State" label="State">
+                                        <aura:iteration items="{!v.lstState}" var="i">
+                                            <option text="{!i}"></option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <ui:inputCheckbox aura:id="isNegative" label="is_Negative: " />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-tabs_default">
+                            <ul class="slds-tabs_default__nav" role="tablist">
+                                <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation">
+                                    <a class="slds-tabs_default__link"  role="tab" tabindex="0" 
+                                       aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">ADDITIONAL INFORMATION</a>
+                                </li>
+                            </ul>
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:textarea aura:id="Comment"
+                                                        name="Comment"
+                                                        label="Comment" />
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning:textarea aura:id="Description"
+                                                        name="Description" 
+                                                        label="Description" />
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer display_footer">
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.CloseModel }"/>
+                        <!-- <lightning:button variant="neutral"
+                                          label="Save &amp; New"
+                                          title="Save and New"
+                                          onclick="{! c.SaveReset }"/> -->
+                        <lightning:button variant="brand"
+                                          label="Save"
+                                          title="Save"
+                                          onclick="{!c.Submit}"/>
+                    </footer>
+                <!-- </article> -->
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" style="visibility: hidden"></div>
+        </aura:if>
+    </div>
+</aura:component>

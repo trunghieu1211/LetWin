@@ -1,0 +1,17 @@
+.THIS.main-component {
+  height: 400px;
+  display: flex;
+  flex-flow: column;
+}
+
+.THIS.main-component > .slds-modal__footer {
+  margin-top: auto;
+}
+
+.THIS.main-component .downline-type-selector .slds-radio {
+    margin-bottom: 1em;
+}
+
+.THIS.main-component .downline-type-selector .slds-radio .slds-form-element__label {
+    vertical-align: unset;
+}

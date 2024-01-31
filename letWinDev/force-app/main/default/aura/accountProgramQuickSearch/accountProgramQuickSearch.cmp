@@ -1,0 +1,8 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="getRecordIdByNameController">    
+    <aura:attribute name="searchTerm" type="String" default=""/>
+    <aura:attribute name="recordId" type="String" />
+    
+    <lightning:input class="input" type="text" aura:id="inputtext" placeholder="Enter Name Search..." name="search" value="{! v.searchTerm}" onchange="{! c.handleOnchange }"/>
+
+    
+</aura:component>

@@ -1,0 +1,75 @@
+<template >
+    <lightning-modal-header label="Shift Check-in"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-grid">
+            <div class="slds-size_1-of-2">
+                <b><lightning-modal-header label="INFORMATION"></lightning-modal-header></b>
+                    <lightning-record-picker
+                    label="Cage"
+                    name="Cage"
+                    placeholder="Search Cage..."
+                    object-api-name="Cage__c"
+                    onchange={handleChangePickerCage}
+                    value = {cageValue}
+                    ></lightning-record-picker>
+
+                    <lightning-record-picker
+                    object-api-name="Shift__c"
+                    label="Shift"
+                    name="Shift"
+                    placeholder="Search Shift..."
+                    value = {shiftValue}
+                    onchange={handleChangePickerShift}
+                    filter= {filter}
+                    ></lightning-record-picker>
+
+                <lightning-input type="text" name="accountName" label="Use scanner, or press Enter to get Information" onchange={hanldeGetInfor}></lightning-input>
+                
+                <div class="slds-grid">
+                    <div class="slds-size_1-of-2">
+                        <lightning-input name="Name" value={Name} disabled="true" type="text" label="Name"></lightning-input>
+                        <lightning-input name="PreferredName" value={PreferredName} disabled="true" type="text" label="Preferred Name"></lightning-input>
+                        <lightning-input name="Gender" value={Gender} type="text" disabled="true" label="Gender"></lightning-input>
+                        <lightning-input name="State" value={State} type="text" disabled="true" label="State"></lightning-input>
+                    </div>
+
+                    <div>
+                        <img class="slds-carousel__image" src="https://www.lightningdesignsystem.com/assets/images/avatar1.jpg" />
+                    </div>
+
+                </div>
+            </div>
+            <div class="slds-size_1-of-2" style="padding-left:20px">
+                <b><lightning-modal-header label="COUNTER"></lightning-modal-header></b>
+                    <!-- dùng innerHTML -->
+                    <!-- <div class="slds-p-top_x-small"> -->
+                        <!-- <input type="radio" class="radio" name="radioBtn" id="radio" value="default" onchange={handleChange} style="margin-left:32px; margin-top:8px; margin-bottom:8px; height:20px; width:20px; vertical-align: middle;" >
+                        <label style="font-size:1em; margin-top:3px;" for="default">default</label><br> -->
+                    <!-- </div> -->
+
+                    <div class="contentRadio">
+                        <template for:each={shiftStaff} for:item="item">
+                            <template lwc:if={item.Contact__c}>
+                                <div key={item.Id} class="radioRow">
+                                    <input class="slds-radio_faux" id={item.User__r.Name} type="radio" disabled="" >
+                                    <label class="cusLabel" for={item.User__r.Name}>{item.User__r.Name}</label>
+                                </div>
+                            </template>
+                            <template lwc:else>
+                                <div key={item.Id} class="radioRow">
+                                    <input class="slds-radio_faux" type="radio" name="radioBtn" id={item.User__r.Name} value={item.Id} onchange={handleChange} >
+                                    <label class="cusLabel" for={item.User__r.Name}>{item.User__r.Name}</label>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+            </div>
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+        <lightning-button class="slds-m-right_x-small" label="Cancel" title="Primary action" onclick={handleCancel}></lightning-button>
+        <lightning-button class="slds-m-right_x-small" variant="brand" label="Check-in" title="Primary action" onclick={handleClick}></lightning-button>
+    </lightning-modal-footer>
+
+</template>

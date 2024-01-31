@@ -1,0 +1,274 @@
+<aura:component
+  controller="StakeholderController"
+  implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction"
+  access="global"
+>
+    <aura:html tag="style">
+        @media (min-width: 47em){
+            .slds-modal_medium .slds-modal__container {
+            width: 84rem ;
+            max-width: 80rem ;
+            min-width: 40rem ;
+            margin-left: -300px ;
+            height:950px;
+        }}
+    </aura:html>
+  <aura:attribute name="isOpenModel" type="boolean" default="false" />
+  <aura:attribute name="isDisableClick" type="boolean" default="false" />
+  <aura:attribute
+    name="lstGenders"
+    type="List"
+    default="[
+        {'label': 'Male', 'value': 'Male'},
+        {'label': 'Female', 'value': 'Female'}
+    ]"
+  />
+  <aura:attribute name="lstLanguage" type="List" default="[]" />
+  <aura:attribute name="lstNationality" type="List" default="[]" />
+  <aura:attribute name="lstState" type="List" />
+  <!-- <aura:attribute name="recordId" type="String"/> -->
+
+  <aura:method name="openModal" action="{!c.OpenModel}" />
+
+  <aura:handler name="init" value="{! this }" action="{! c.init }" />
+
+  <div class="slds-m-around_max-large">
+    <aura:if isTrue="{!v.isOpenModel}">
+      <!-- Modal/Popup Box starts here-->
+      <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-modal_medium">
+        <div class="slds-modal__container">
+          <!-- <div class="slds-modal__container"> -->
+          <!-- Modal/Popup Box Header Starts here-->
+          <header class="slds-modal__header">
+            <lightning:buttonIcon iconName="utility:close"
+                                  onclick="{! c.CloseModel }"
+                                  alternativeText="close"
+                                  variant="bare-inverse"
+                                  class="slds-modal__close"/>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create New Agent</h2>
+          </header>
+          <!--Modal/Popup Box Body Starts here-->
+          <div class="slds-modal__content slds-p-around_medium input-form" id="modal-content-id-1">
+            <div class="slds-tabs_default">
+              <ul class="slds-tabs_default__nav" role="tablist">
+                  <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation">
+                      <a class="slds-tabs_default__link"  role="tab" tabindex="0" 
+                        aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">PERSONAL INFORMATION</a>
+                  </li>
+              </ul>
+              <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-2">
+                        <c:O1CustomLookup objectName="Account"
+                                        fields = "['Id', 'Name']"
+                                        iconName="standard:account"
+                                        label="ShareHolder or Agent"
+                                        setLabel="Name"
+                                        searchFields="['Name']"
+                                        condition="{! 'RecordType.Name = \'ShareHolder\' or RecordType.Name = \'Agent\'  and Id = \''+ v.recordId +'\' '}"
+                                        initValue="{!v.recordId}"
+                                        aura:id="Parent"
+                                        />
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning:input aura:id="Name" label="Account Name" required="true" />
+                    </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <c:CustomLookup objectName="Cage__c" 
+                                      fieldName="Name" 
+                                      label="Cage Location" 
+                                      iconName="standard:opportunity" 
+                                      placeholder="Search Cage"
+                                      aura:id="Cage"
+                                      />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Identity" label="Identity" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Code" label="Code" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="PreferredName" label="Preferred Name" required="true"/>
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="CKName" label="Chinese/Korean Name" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Nickname" label="Nickname" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:select aura:id="Language" label="Language" required="true">
+                          <aura:iteration items="{!v.lstLanguage}" var="i">
+                              <option text="{!i}"></option>
+                          </aura:iteration>
+                      </lightning:select>
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input type="date" aura:id="DOB" label="Date of birth" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Age" label="Age" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:combobox aura:id="Gender" label="Gender" value="" options="{! v.lstGenders }" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:select aura:id="Nationality" label="Nationality" required="true">
+                          <aura:iteration items="{!v.lstNationality}" var="i">
+                              <option text="{!i}"></option>
+                          </aura:iteration>
+                      </lightning:select>
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Passport" label="Passport No" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Origin" label="Origin" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input type="tel" label="Contact Phone Number" aura:id="Phone" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input type="email" aura:id="Email" label="Email" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Address" label="Address" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:select aura:id="State" label="State">
+                          <aura:iteration items="{!v.lstState}" var="i">
+                              <option text="{!i}"></option>
+                          </aura:iteration>
+                      </lightning:select>
+                  </div>
+              </div>
+            </div>
+          
+            <div class="slds-tabs_default">
+              <ul class="slds-tabs_default__nav" role="tablist">
+                  <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation">
+                      <a class="slds-tabs_default__link" role="tab" tabindex="0" 
+                        aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">REGISTER INFORMATION</a>
+                  </li>
+              </ul>
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="HoianaPID" label="Hoiana PID" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="TheGrandPID" label="The Grand PID" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input type="date" aura:id="Signup" label="Signup Date" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="SignupLocation" label="Signup Location" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Referal" label="Referral" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="PreferContactChannel" label="Prefer contact channel" />
+                  </div>
+              </div>
+              
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Responsible" label="Responsible for Sales/VSRD" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="Upline" label="Upline Account" />
+                  </div>
+              </div>
+            </div>
+          
+            <div class="slds-tabs_default">
+              <ul class="slds-tabs_default__nav" role="tablist">
+                  <li class="slds-tabs_default__item slds-is-active" title="Item One" role="presentation">
+                      <a class="slds-tabs_default__link" role="tab" tabindex="0" 
+                        aria-selected="true" aria-controls="tab-default-1" id="tab-default-1__item">ADDITIONAL INFORMATION</a>
+                  </li>
+              </ul>
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:textarea aura:id="Comment" label="Comment" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:textarea aura:id="Description" label="Description" />
+                  </div>
+              </div>
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="UploadPassport" label="Upload Passport" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="UploadSignature" label="Upload signature style" />
+                  </div>
+              </div>
+              <div class="slds-grid slds-gutters">
+                  <div class="slds-col slds-size_1-of-2">
+                      <lightning:input aura:id="UploadAccForm" label="Upload Open Account Form" />
+                  </div>
+                  <div class="slds-col slds-size_1-of-2">
+                      
+                  </div>
+              </div>
+            </div>
+          </div>
+          <!--Modal/Popup Box Footer Starts here-->
+            <footer class="slds-modal__footer display_footer">
+              <lightning:button variant="neutral"
+                                label="Cancel"
+                                title="Cancel"
+                                onclick="{! c.CloseModel }"/>
+              <!-- <lightning:button variant="neutral"
+                                label="Save &amp; New"
+                                title="Save and New"
+                                onclick="{! c.SaveReset }"/> -->
+              <lightning:button variant="brand"
+                                label="Create"
+                                title="Create"
+                                onclick="{!c.Submit}"/>
+            </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open" style="visibility: hidden"></div>
+    </aura:if>
+  </div>
+</aura:component>

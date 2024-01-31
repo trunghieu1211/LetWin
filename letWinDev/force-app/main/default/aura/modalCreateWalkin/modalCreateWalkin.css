@@ -1,0 +1,28 @@
+.THIS .input-form{
+    min-height: 350px;
+}
+.THIS .slds-grid {
+    padding: 6px;
+}
+.THIS.ShareHolder {
+    margin-left: 10px;
+    float: right;
+}
+.THIS .slds-modal__footer {
+    text-align: center;
+}
+.THIS .page-2{
+    padding-top:9px;
+}
+.THIS .display_footer{
+    display:block;
+}
+.THIS .slds-modal__content{
+    padding-left: 16px;
+    padding-right:16px;
+    height:700px;
+    /* width: 100%; */
+}
+.THIS .slds-form-element__control{
+    margin-left:0px;
+}
